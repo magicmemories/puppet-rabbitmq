@@ -93,9 +93,24 @@ Puppet::Type.type(:rabbitmq_binding).provide(:rabbitmqadmin, parent: Puppet::Pro
     @property_hash[:ensure] = :present
   end
 
+
+  KEYS = %w{arguments destination destination_type routing_key source vhost}
+  def properties_key(vhost_opt)
+    data = rabbitmqadmin('list','bindings',vhost_opt, "--user=#{resource[:user]}", "--password=#{resource[:password]}", '-c', '/etc/rabbitmq/rabbitmqadmin.conf', '-f', 'raw_json')
+    bindings = JSON.parse(data)
+    target = bindings.find {|bnd| KEYS.all? {|key| bnd[key] == resource[key.to_sym] } }
+    target["properties_key"]
+  end
+
   def destroy
     vhost_opt = should_vhost ? "--vhost=#{should_vhost}" : ''
-    rabbitmqadmin('delete', 'binding', vhost_opt, "--user=#{resource[:user]}", "--password=#{resource[:password]}", '-c', '/etc/rabbitmq/rabbitmqadmin.conf', "source=#{resource[:source]}", "destination_type=#{resource[:destination_type]}", "destination=#{resource[:destination]}", "properties_key=#{resource[:routing_key]}")
+    if resource[:arguments] && !resource[:arguments].empty?
+      prop_key = properties_key(vhost_opt)
+    else
+      prop_key = resource[:routing_key]
+    end
+    rabbitmqadmin('delete', 'binding', vhost_opt, "--user=#{resource[:user]}", "--password=#{resource[:password]}", '-c', '/etc/rabbitmq/rabbitmqadmin.conf', "source=#{resource[:source]}", "destination_type=#{resource[:destination_type]}", "destination=#{resource[:destination]}", "properties_key=#{prop_key}")
     @property_hash[:ensure] = :absent
   end
+
 end
