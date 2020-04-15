@@ -41,7 +41,7 @@ Puppet::Type.type(:rabbitmq_binding).provide(:rabbitmqadmin, parent: Puppet::Pro
         else
           arguments = '{}'
         end
-        hashed_name = Digest::SHA256.hexdigest format('%s@%s@%s@%s', source_name, destination_name, vhost, routing_key)
+        hashed_name = Digest::SHA256.hexdigest format('%s@%s@%s@%s%s', source_name, destination_name, vhost, routing_key, arguments)
         next if source_name.empty?
         binding = {
           source: source_name,
