@@ -36,7 +36,7 @@ Puppet::Type.type(:rabbitmq_binding).provide(:rabbitmqadmin, parent: Puppet::Pro
         source_name, destination_name, destination_type, routing_key, arguments = line.split(%r{\t})
         # Convert output of arguments from the rabbitmqctl command to a json string.
         if !arguments.nil?
-          arguments = arguments.gsub(%r{^\[(.*)\]$}, '').gsub(%r{\{("(?:.|\\")*?"),}, '{\1:').gsub(%r{\},\{}, ',')
+          arguments = arguments.gsub(%r{^\[(.*)\]$}, '\1').gsub(%r{\{("(?:.|\\")*?"),}, '{\1:').gsub(%r{\},\{}, ',')
           arguments = '{}' if arguments == ''
         else
           arguments = '{}'
