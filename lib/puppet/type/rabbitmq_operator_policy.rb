@@ -1,4 +1,4 @@
-Puppet::Type.newtype(:rabbitmq_policy) do
+Puppet::Type.newtype(:rabbitmq_operator_policy) do
   desc <<-DESC
 Type for managing rabbitmq operator policies
 
