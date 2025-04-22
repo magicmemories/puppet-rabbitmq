@@ -6,7 +6,7 @@ Puppet::Type.type(:rabbitmq_plugin).provide(:rabbitmqplugins, parent: Puppet::Pr
 
   def self.instances
     plugin_list = run_with_retries do
-      rabbitmqplugins('list', '-E', '-m', '-s')
+      rabbitmqplugins('list', '-e', '-m', '-s')
     end
 
     plugin_list.split(%r{\n}).map do |line|

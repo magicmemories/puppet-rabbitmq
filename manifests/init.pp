@@ -486,7 +486,6 @@ class rabbitmq (
     if ($management_enable or $admin_enable) and $service_manage {
       rabbitmq_plugin { 'rabbitmq_management':
         ensure   => present,
-        notify   => Class['rabbitmq::service'],
         provider => 'rabbitmqplugins',
       }
     }
@@ -494,7 +493,6 @@ class rabbitmq (
     if ($stomp_ensure) {
       rabbitmq_plugin { 'rabbitmq_stomp':
         ensure   => present,
-        notify   => Class['rabbitmq::service'],
         provider => 'rabbitmqplugins',
       }
     }
@@ -502,7 +500,6 @@ class rabbitmq (
     if ($ldap_auth) {
       rabbitmq_plugin { 'rabbitmq_auth_backend_ldap':
         ensure   => present,
-        notify   => Class['rabbitmq::service'],
         provider => 'rabbitmqplugins',
       }
     }
@@ -510,14 +507,12 @@ class rabbitmq (
     if ($config_shovel) {
       rabbitmq_plugin { 'rabbitmq_shovel':
         ensure   => present,
-        notify   => Class['rabbitmq::service'],
         provider => 'rabbitmqplugins',
       }
 
       if ($management_enable or $admin_enable) {
         rabbitmq_plugin { 'rabbitmq_shovel_management':
           ensure   => present,
-          notify   => Class['rabbitmq::service'],
           provider => 'rabbitmqplugins',
         }
       }
